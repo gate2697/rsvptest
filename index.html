@@ -1,8 +1,94 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Graduation RSVP</title>
+  <meta charset="UTF-8" />
+  <title>🎓 Graduation RSVP</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: #f3f4f6;
+      color: #333;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 60px auto;
+      padding: 20px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2em;
+      margin-bottom: 10px;
+    }
+
+    p {
+      text-align: center;
+      font-size: 1.1em;
+      color: #555;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 20px;
+    }
+
+    input[type="text"] {
+      padding: 12px;
+      width: 100%;
+      max-width: 400px;
+      font-size: 1em;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+
+    button {
+      padding: 12px 25px;
+      background-color: #4f46e5;
+      color: white;
+      font-size: 1em;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    button:hover {
+      background-color: #4338ca;
+    }
+
+    .gallery {
+      display: flex;
+      gap: 10px;
+      margin-top: 40px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .gallery img {
+      width: 180px;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    footer {
+      text-align: center;
+      font-size: 0.9em;
+      margin-top: 40px;
+      color: #888;
+    }
+  </style>
+
   <script>
     async function submitForm(e) {
       e.preventDefault();
@@ -19,12 +105,25 @@
     }
   </script>
 </head>
-<body style="font-family: sans-serif; max-width: 600px; margin: 50px auto;">
-  <h1>🎓 Graduation RSVP</h1>
-  <p>Please enter your name to RSVP:</p>
-  <form onsubmit="submitForm(event)">
-    <input id="name" type="text" required placeholder="Your Name" style="padding: 10px; width: 100%; margin-bottom: 10px;">
-    <button type="submit" style="padding: 10px 20px;">Submit</button>
-  </form>
+<body>
+  <div class="container">
+    <h1>🎓 You're Invited!</h1>
+    <p>I'm graduating! Please RSVP below — I'd love to see you there!</p>
+
+    <form onsubmit="submitForm(event)">
+      <input id="name" type="text" required placeholder="Your Name" />
+      <button type="submit">RSVP</button>
+    </form>
+
+    <div class="gallery">
+      <img src="photo1.jpg" alt="Grad Photo 1">
+      <img src="photo2.jpg" alt="Grad Photo 2">
+      <img src="photo3.jpg" alt="Grad Photo 3">
+    </div>
+
+    <footer>
+      Made with ❤️ for my graduation ✨
+    </footer>
+  </div>
 </body>
 </html>
