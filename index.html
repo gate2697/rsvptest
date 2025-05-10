@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Graduation RSVP</title>
+  <script>
+    async function submitForm(e) {
+      e.preventDefault();
+      const name = document.getElementById('name').value;
+
+      const response = await fetch('/api/rsvp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name })
+      });
+
+      const result = await response.text();
+      alert(result);
+    }
+  </script>
+</head>
+<body style="font-family: sans-serif; max-width: 600px; margin: 50px auto;">
+  <h1>🎓 Graduation RSVP</h1>
+  <p>Please enter your name to RSVP:</p>
+  <form onsubmit="submitForm(event)">
+    <input id="name" type="text" required placeholder="Your Name" style="padding: 10px; width: 100%; margin-bottom: 10px;">
+    <button type="submit" style="padding: 10px 20px;">Submit</button>
+  </form>
+</body>
+</html>
