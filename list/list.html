@@ -74,6 +74,31 @@
       <button type="submit">RSVP</button>
     </form>
   </div>
+  <script>
+  async function clearRSVPList() {
+    try {
+      const response = await fetch('/api/rsvp', {
+        method: 'DELETE', // Use DELETE method to clear the list
+      });
+      
+      const data = await response.json();
+      
+      if (response.ok) {
+        alert('RSVP list cleared!');
+        // Optionally, update the list on the page after clearing
+        document.getElementById('rsvp-list').innerHTML = '';
+      } else {
+        alert('Error clearing RSVP list: ' + data.error);
+      }
+    } catch (error) {
+      console.error('There was an error:', error);
+      alert('Failed to clear RSVP list.');
+    }
+  }
+</script>
+
+<button onclick="clearRSVPList()">Clear RSVP List</button>
+
 
   <script>
     async function fetchRSVPs() {
@@ -124,5 +149,6 @@
     // Load the RSVP list on page load
     fetchRSVPs();
   </script>
+
 </body>
 </html>
