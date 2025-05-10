@@ -2,20 +2,20 @@ const { kv } = require('@vercel/kv');
 const nodemailer = require('nodemailer');
 
 module.exports = async (req, res) => {
+  // Only allow POST requests
   if (req.method !== 'POST') return res.status(405).send('Method Not Allowed');
+  
+  const { name: guestName } = req.body; // Extract name from body
+  if (!guestName) return res.status(400).send('Name is required'); // Check if name is present
 
-  const { name: guestName } = req.body; // Rename 'name' to avoid TS deprecation warning
-  if (!guestName) return res.status(400).send('Name is required');
-
-  // Save RSVP name to Vercel KV list
   try {
-    await kv.rpush('rsvp_list', guestName); // Append to list called 'rsvp_list'
+    await kv.rpush('rsvp_list', guestName); // Append to list in Vercel KV
   } catch (err) {
     console.error('Error saving to KV:', err);
     return res.status(500).send('Error saving RSVP');
   }
 
-  // Send email notification
+  // Send confirmation email (using nodemailer)
   const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -40,16 +40,16 @@ module.exports = async (req, res) => {
     return res.status(500).send('Error sending email.');
   }
 
-  // Fetch and return the current list of RSVP'd guests
+  // Get updated RSVP list
   let rsvpList;
   try {
-    rsvpList = await kv.lrange('rsvp_list', 0, -1); // Get all the RSVPs in the list
+    rsvpList = await kv.lrange('rsvp_list', 0, -1);
   } catch (err) {
     console.error('Error fetching RSVP list from KV:', err);
     return res.status(500).send('Error fetching RSVP list');
   }
 
-  // Respond with a success message and the updated list
+  // Send response
   res.status(200).send({
     message: 'Thank you! Your RSVP has been received.',
     rsvpList
