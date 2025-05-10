@@ -5,6 +5,7 @@
   <title>🎓 Graduation RSVP</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
+    /* Styling (same as before) */
     html, body {
       margin: 0;
       padding: 0;
@@ -133,6 +134,26 @@
       color: #555;
     }
 
+    #rsvp-list {
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #f3f4f6;
+      border-radius: 8px;
+      text-align: left;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    #rsvp-list ul {
+      list-style-type: none;
+      padding-left: 0;
+    }
+
+    #rsvp-list li {
+      margin: 5px 0;
+    }
+
     @media (max-width: 800px) {
       .side-gallery {
         display: none;
@@ -164,13 +185,48 @@
           body: JSON.stringify({ name })
         });
 
-        const result = await response.text();
-        alert(result);
+        const result = await response.json();
+
+        if (response.ok) {
+          alert(result.message);
+          updateRSVPList(result.rsvpList); // Update the list of RSVP'd guests
+        } else {
+          alert(result.error || 'There was an error submitting your RSVP.');
+        }
       } catch (error) {
         console.error('Error submitting RSVP:', error);
         alert('There was an error submitting your RSVP.');
       }
     }
+
+    // Function to update the RSVP list on the page
+    function updateRSVPList(rsvpList) {
+      const listContainer = document.getElementById('rsvp');
+      listContainer.innerHTML = ''; // Clear the existing list
+
+      const ul = document.createElement('ul');
+      rsvpList.forEach(guest => {
+        const li = document.createElement('li');
+        li.textContent = guest;
+        ul.appendChild(li);
+      });
+
+      listContainer.appendChild(ul);
+    }
+
+    // Initial fetch of the RSVP list when the page loads
+    window.onload = async () => {
+      try {
+        const response = await fetch('/api/rsvp');
+        const result = await response.json();
+
+        if (response.ok) {
+          updateRSVPList(result.rsvpList); // Populate the RSVP list
+        }
+      } catch (error) {
+        console.error('Error fetching RSVP list:', error);
+      }
+    };
   </script>
 </head>
 <body>
@@ -197,6 +253,10 @@
       <br />
       <button type="submit">Submit your RSVP</button>
     </form>
+
+    <div id="rsvp-list">
+      <!-- RSVP list will appear here -->
+    </div>
 
     <footer>
       Made with love for my graduation party.

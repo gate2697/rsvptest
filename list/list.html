@@ -100,7 +100,7 @@
       if (!guestName) return;
 
       try {
-        const res = await fetch('/api/rsvplist', {
+        const res = await fetch('../api/rsvp', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ name: guestName })
