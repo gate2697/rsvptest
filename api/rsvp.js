@@ -71,8 +71,16 @@ module.exports = async (req, res) => {
       rsvpList
     });
   }
-
+  if (req.method === 'DELETE') {  // Handle clearing the KV list
+    try {
+      await kv.del('rsvp_list');  // Delete the list from Vercel KV
+      return res.status(200).send({ message: 'RSVP list cleared successfully.' });
+    } catch (err) {
+      console.error('Error clearing RSVP list:', err);
+      return res.status(500).send('Error clearing RSVP list.');
+    }
+  }
   // Handling unsupported methods
-  res.setHeader('Allow', ['POST', 'GET']);
+  res.setHeader('Allow', ['POST', 'GET', 'DELETE']);
   return res.status(405).send('Method Not Allowed');
 };
