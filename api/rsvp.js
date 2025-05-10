@@ -1,3 +1,4 @@
+const { kv } = require('@vercel/kv');
 const nodemailer = require('nodemailer');
 
 module.exports = async (req, res) => {
@@ -6,6 +7,15 @@ module.exports = async (req, res) => {
   const { name } = req.body;
   if (!name) return res.status(400).send('Name is required');
 
+  // Save RSVP name to Vercel KV list
+  try {
+    await kv.rpush('rsvp_list', name); // Append to list called 'rsvp_list'
+  } catch (err) {
+    console.error('Error saving to KV:', err);
+    return res.status(500).send('Error saving RSVP');
+  }
+
+  // Send email
   const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -28,6 +38,6 @@ module.exports = async (req, res) => {
     res.status(200).send('Thank you! Your RSVP has been received.');
   } catch (err) {
     console.error(err);
-    res.status(500).send('Error sending RSVP. Try again later.');
+    res.status(500).send('Error sending email.');
   }
 };

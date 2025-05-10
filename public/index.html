@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>🎓 Graduation RSVP</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2rem;
+      background: linear-gradient(135deg, #fcd34d, #fbcfe8, #a5b4fc);
+      background-size: 400% 400%;
+      animation: hueShift 15s linear infinite;
+    }
+
+    @keyframes hueShift {
+      0%   { filter: hue-rotate(0deg); }
+      100% { filter: hue-rotate(360deg); }
+    }
+
+    .container {
+      background: white;
+      max-width: 600px;
+      margin: auto;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 0 40px rgba(0,0,0,0.2);
+      text-align: center;
+    }
+
+    input[type="text"] {
+      padding: 10px;
+      font-size: 1em;
+      width: 70%;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 1em;
+      background: #4f46e5;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #4338ca;
+    }
+
+    ul {
+      margin-top: 2rem;
+      text-align: left;
+    }
+
+    li {
+      margin-bottom: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎉 RSVP to Nicholas' Graduation</h1>
+    <p>Type your name and submit!</p>
+    <form id="rsvp-form">
+      <input type="text" id="nameInput" placeholder="Your Name" required />
+      <button type="submit">RSVP</button>
+    </form>
+
+    <h3>✅ People Coming:</h3>
+    <ul id="rsvpList">
+      <li>Loading...</li>
+    </ul>
+  </div>
+
+  <script>
+    async function fetchRSVPs() {
+      const res = await fetch('../api/rsvplist');
+      const names = await res.json();
+      const list = document.getElementById('rsvpList');
+      list.innerHTML = '';
+      names.forEach(name => {
+        const li = document.createElement('li');
+        li.textContent = name;
+        list.appendChild(li);
+      });
+    }
+
+    document.getElementById('rsvp-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('nameInput').value;
+      await fetch('/api/rsvp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name })
+      });
+      document.getElementById('nameInput').value = '';
+      fetchRSVPs();
+    });
+
+    fetchRSVPs();
+  </script>
+</body>
+</html>
