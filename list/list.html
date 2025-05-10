@@ -78,7 +78,7 @@
   <script>
     async function fetchRSVPs() {
       try {
-        const res = await fetch('/api/rsvplist');
+        const res = await fetch('../api/rsvplist');
         const { rsvpList } = await res.json();
         const list = document.getElementById('rsvpList');
         list.innerHTML = '';
