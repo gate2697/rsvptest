@@ -20,14 +20,14 @@ module.exports = async (req, res) => {
   // Handling POST request to add a new RSVP
   if (req.method === 'POST') {
     const { name: guestName } = req.body; // Extract name from body
-    if (!guestName) return res.status(400).send('Name is required'); // Ensure name is provided
+    if (!guestName) return res.status(400).json({ error: 'Name is required' }); // Ensure name is provided
 
     try {
       // Append the guest name to the RSVP list in Vercel KV
       await kv.rpush('rsvp_list', guestName);
     } catch (err) {
       console.error('Error saving to KV:', err);
-      return res.status(500).send('Error saving RSVP');
+      return res.status(500).json({ error: 'Error saving RSVP to list.' });
     }
 
     // Set up Nodemailer to send an email notification
@@ -53,7 +53,7 @@ module.exports = async (req, res) => {
       await transporter.sendMail(mailOptions);
     } catch (err) {
       console.error('Error sending email:', err);
-      return res.status(500).send('Error sending email.');
+      return res.status(500).json({ error: 'Error sending RSVP confirmation email.' });
     }
 
     // Fetch the updated RSVP list
@@ -62,7 +62,7 @@ module.exports = async (req, res) => {
       rsvpList = await kv.lrange('rsvp_list', 0, -1);
     } catch (err) {
       console.error('Error fetching RSVP list from KV:', err);
-      return res.status(500).send('Error fetching RSVP list');
+      return res.status(500).json({ error: 'Error fetching updated RSVP list.' });
     }
 
     // Send the response back to the client with confirmation and updated list
@@ -71,16 +71,20 @@ module.exports = async (req, res) => {
       rsvpList
     });
   }
-  if (req.method === 'DELETE') {  // Handle clearing the KV list
+
+  // Handling DELETE request to clear the RSVP list
+  if (req.method === 'DELETE') {  
     try {
-      await kv.del('rsvp_list');  // Delete the list from Vercel KV
-      return res.status(200).send({ message: 'RSVP list cleared successfully.' });
+      // Delete the RSVP list from Vercel KV
+      await kv.del('rsvp_list');
+      return res.status(200).json({ message: 'RSVP list cleared successfully.' });
     } catch (err) {
       console.error('Error clearing RSVP list:', err);
-      return res.status(500).send('Error clearing RSVP list.');
+      return res.status(500).json({ error: 'Error clearing RSVP list.' });
     }
   }
+
   // Handling unsupported methods
   res.setHeader('Allow', ['POST', 'GET', 'DELETE']);
-  return res.status(405).send('Method Not Allowed');
+  return res.status(405).json({ error: 'Method Not Allowed' });
 };
