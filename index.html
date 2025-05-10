@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap" rel="stylesheet">
   <meta charset="UTF-8" />
   <title>🎓 Graduation RSVP</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -15,24 +18,34 @@
     }
 
     body::before {
-      content: "";
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -1;
-      background: linear-gradient(135deg, #a5b4fc, #fbcfe8, #fcd34d);
-      background-size: 400% 400%;
-      animation: hueShift 15s linear infinite;
-      filter: hue-rotate(0deg);
-      opacity: 0.4;
-    }
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  background-color: #e2102a;  /* Starting color */
+  animation: colorCycle 30s linear infinite;
+  opacity: 0.4;
+}
 
-    @keyframes hueShift {
-      0%   { filter: hue-rotate(0deg); }
-      100% { filter: hue-rotate(360deg); }
-    }
+@keyframes colorCycle {
+  0% {
+    background-color: #e2102a;
+  }
+  33% {
+    background-color: #203f99;
+  }
+  66% {
+    background-color: #a5a6aa;
+  }
+  100% {
+    background-color: #e2102a;
+  }
+}
+
+
 
     .side-gallery {
       position: fixed;
@@ -78,9 +91,32 @@
       z-index: 1;
     }
 
-    h1 {
+    .header-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .header-container h1 {
       font-size: 2.2em;
       margin-bottom: 10px;
+    }
+
+    .header-container .frame {
+      width: 100px;
+      height: 100px;
+      background-color: #fff;
+      border: 4px solid #4f46e5;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .header-container .frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
 
     p {
@@ -132,6 +168,15 @@
     footer:hover {
       color: #555;
     }
+    .luckiest-guy-regular {
+  font-family: "Luckiest Guy", cursive;
+  font-weight: 400;
+  font-style: normal;
+}
+
+    h2{
+      font-family: "Luckiest Guy", cursive;
+    }
 
     /* List styling */
     .rsvp-list {
@@ -166,11 +211,11 @@
   </style>
 
   <script>
-    let isSubmitting = false;  // Flag to prevent multiple submissions
+    let isSubmitting = false;
 
     window.onload = async () => {
       try {
-        const response = await fetch('/api/rsvp');  // Replace with your API endpoint
+        const response = await fetch('/api/rsvp');
         const data = await response.json();
 
         if (response.ok) {
@@ -191,39 +236,17 @@
         alert('Failed to load RSVP list.');
       }
     };
-    async function fetchRSVPList() {
-  try {
-        const response = await fetch('/api/rsvp');  // Replace with your API endpoint
-        const data = await response.json();
 
-        if (response.ok) {
-          const rsvpList = data.rsvpList;
-          const listElement = document.getElementById('rsvp-list');
-          listElement.innerHTML = '';
-
-          rsvpList.forEach(guest => {
-            const listItem = document.createElement('li');
-            listItem.textContent = guest;
-            listElement.appendChild(listItem);
-          });
-        } else {
-          alert('Error fetching RSVP list: ' + data.error);
-        }
-      } catch (error) {
-        console.error('There was an error:', error);
-        alert('Failed to load RSVP list.');
-      }
-}
     async function submitForm(e) {
       e.preventDefault();
 
-      if (isSubmitting) return;  // Prevent submission if already submitting
+      if (isSubmitting) return;
       isSubmitting = true;
 
       const name = document.getElementById('name').value;
       const submitButton = document.querySelector("button");
 
-      submitButton.disabled = true;  // Disable the submit button during submission
+      submitButton.disabled = true;
 
       try {
         const response = await fetch('/api/rsvp', {
@@ -235,18 +258,16 @@
         const result = await response.json();
         alert(result.message);
 
-        // After submitting, fetch the updated list
         fetchRSVPList();
       } catch (error) {
         console.error('Error submitting RSVP:', error);
         alert('There was an error submitting your RSVP.');
       } finally {
         isSubmitting = false;
-        submitButton.disabled = false;  // Re-enable the button after submission
+        submitButton.disabled = false;
       }
     }
   </script>
-
 </head>
 <body>
 
@@ -263,7 +284,15 @@
   </div>
 
   <div class="container">
-    <h1>🎓 You're Invited!</h1>
+    <div class="header-container">
+      <div class="frame">
+        <img src="frame1.jpg" alt="Frame 1">
+      </div>
+      <h1>🎓 You're Invited!</h1>
+      <div class="frame">
+        <h2>Class of <br> 2025</h2>>
+      </div>
+    </div>
     <p>It's an RSVP form for my graduation party... I got nothing else.</p>
 
     <form onsubmit="submitForm(event)">
@@ -274,9 +303,7 @@
     </form>
 
     <h2>RSVP List:</h2>
-    <ul id="rsvp-list" class="rsvp-list">
-      <!-- List of RSVPs will be dynamically populated here -->
-    </ul>
+    <ul id="rsvp-list" class="rsvp-list"></ul>
 
     <footer>
       Made with love for my graduation party.
