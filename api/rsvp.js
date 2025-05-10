@@ -3,8 +3,18 @@ const nodemailer = require('nodemailer');
 
 module.exports = async (req, res) => {
   if (req.method === 'GET') {
-    return res.status(200).json({ message: 'RSVP API is reachable.' });
+  try {
+    const rsvpList = await kv.lrange('rsvp_list', 0, -1);
+    return res.status(200).json({
+      message: 'RSVP list retrieved successfully.',
+      rsvpList
+    });
+  } catch (err) {
+    console.error('Error fetching RSVP list:', err);
+    return res.status(500).json({ error: 'Failed to retrieve RSVP list.' });
   }
+}
+
 
   if (req.method !== 'POST') {
     res.setHeader('Allow', ['POST', 'GET']);
