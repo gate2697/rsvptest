@@ -15,7 +15,7 @@ module.exports = async (req, res) => {
     return res.status(500).send('Error saving RSVP');
   }
 
-  // Send email
+  // Send email notification
   const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
