@@ -1,24 +1,66 @@
-<script>
-  async function clearRSVPList() {
-    try {
-      const response = await fetch('/api/rsvp', {
-        method: 'DELETE', // Use DELETE method to clear the list
-      });
-      
-      const data = await response.json();
-      
-      if (response.ok) {
-        alert('RSVP list cleared!');
-        // Optionally, update the list on the page after clearing
-        document.getElementById('rsvp-list').innerHTML = '';
-      } else {
-        alert('Error clearing RSVP list: ' + data.error);
-      }
-    } catch (error) {
-      console.error('There was an error:', error);
-      alert('Failed to clear RSVP list.');
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clear RSVP List</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 50px;
     }
-  }
-</script>
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: red;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: darkred;
+    }
+    p {
+      font-size: 18px;
+      color: green;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <h1>Clear the RSVP List</h1>
+  <p>Click the button below to clear the RSVP list. This action cannot be undone!</p>
+  
+  <button id="clear-btn">Clear RSVP List</button>
 
-<button onclick="clearRSVPList()">Clear RSVP List</button>
+  <p id="status-message"></p>
+
+  <script>
+    document.getElementById('clear-btn').addEventListener('click', async () => {
+      try {
+        const response = await fetch('/api/rsvp', {
+          method: 'DELETE', // Use DELETE to clear the list
+        });
+        
+        const data = await response.json();
+
+        if (response.ok) {
+          document.getElementById('status-message').textContent = 'RSVP list cleared successfully!';
+          document.getElementById('status-message').classList.remove('error');
+          document.getElementById('status-message').classList.add('success');
+        } else {
+          document.getElementById('status-message').textContent = 'Error clearing RSVP list: ' + data.error;
+          document.getElementById('status-message').classList.add('error');
+        }
+      } catch (error) {
+        console.error('There was an error:', error);
+        document.getElementById('status-message').textContent = 'Failed to clear RSVP list.';
+        document.getElementById('status-message').classList.add('error');
+      }
+    });
+  </script>
+</body>
+</html>
