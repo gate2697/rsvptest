@@ -63,13 +63,6 @@
 </head>
 <body>
   <div class="container">
-    <h1>🎉 RSVP to Nicholas' Graduation</h1>
-    <p>Type your name and submit!</p>
-    <form id="rsvp-form">
-      <input type="text" id="nameInput" placeholder="Your Name" required />
-      <button type="submit">RSVP</button>
-    </form>
-
     <h3>✅ People Coming:</h3>
     <ul id="rsvpList">
       <li>Loading...</li>
@@ -88,18 +81,6 @@
         list.appendChild(li);
       });
     }
-
-    document.getElementById('rsvp-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const name = document.getElementById('nameInput').value;
-      await fetch('/api/rsvp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name })
-      });
-      document.getElementById('nameInput').value = '';
-      fetchRSVPs();
-    });
 
     fetchRSVPs();
   </script>
