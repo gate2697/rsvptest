@@ -67,21 +67,61 @@
     <ul id="rsvpList">
       <li>Loading...</li>
     </ul>
+
+    <h3>RSVP for Graduation</h3>
+    <form id="rsvpForm">
+      <input type="text" id="guestName" placeholder="Enter your name" required />
+      <button type="submit">RSVP</button>
+    </form>
   </div>
 
   <script>
     async function fetchRSVPs() {
-      const res = await fetch('../api/rsvplist');
-      const names = await res.json();
-      const list = document.getElementById('rsvpList');
-      list.innerHTML = '';
-      names.forEach(name => {
-        const li = document.createElement('li');
-        li.textContent = name;
-        list.appendChild(li);
-      });
+      try {
+        const res = await fetch('/api/rsvplist');
+        const { rsvpList } = await res.json();
+        const list = document.getElementById('rsvpList');
+        list.innerHTML = '';
+        rsvpList.forEach(name => {
+          const li = document.createElement('li');
+          li.textContent = name;
+          list.appendChild(li);
+        });
+      } catch (error) {
+        console.error('Error fetching RSVPs:', error);
+        const list = document.getElementById('rsvpList');
+        list.innerHTML = '<li>Error loading RSVP list.</li>';
+      }
     }
 
+    async function handleRSVP(event) {
+      event.preventDefault();
+      const guestName = document.getElementById('guestName').value;
+      if (!guestName) return;
+
+      try {
+        const res = await fetch('/api/rsvplist', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: guestName })
+        });
+
+        const data = await res.json();
+        if (res.ok) {
+          alert(data.message);
+          fetchRSVPs(); // Refresh the list after RSVP
+        } else {
+          alert(data.message || 'Error submitting RSVP');
+        }
+      } catch (error) {
+        console.error('Error submitting RSVP:', error);
+        alert('An error occurred while submitting your RSVP.');
+      }
+    }
+
+    document.getElementById('rsvpForm').addEventListener('submit', handleRSVP);
+
+    // Load the RSVP list on page load
     fetchRSVPs();
   </script>
 </body>

@@ -157,14 +157,19 @@
       e.preventDefault();
       const name = document.getElementById('name').value;
 
-      const response = await fetch('/api/rsvp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name })
-      });
+      try {
+        const response = await fetch('/api/rsvp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name })
+        });
 
-      const result = await response.text();
-      alert(result);
+        const result = await response.text();
+        alert(result);
+      } catch (error) {
+        console.error('Error submitting RSVP:', error);
+        alert('There was an error submitting your RSVP.');
+      }
     }
   </script>
 </head>
