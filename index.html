@@ -167,22 +167,34 @@
 
   <script>
     // Function to fetch the list of RSVPs from the server
-    async function fetchRSVPList() {
+    document.getElementById('rsvp-list').addEventListener('click', async () => {
       try {
-        const response = await fetch('/api/rsvp');
-        const rsvpData = await response.json();
-        const rsvpList = document.getElementById('rsvp-list');
-        rsvpList.innerHTML = ''; // Clear the current list
-        
-        rsvpData.forEach(name => {
-          const listItem = document.createElement('li');
-          listItem.textContent = name;
-          rsvpList.appendChild(listItem);
-        });
+        // Fetch the RSVP list from your server
+        const response = await fetch('/api/rsvp');  // Replace with your API endpoint
+        const data = await response.json();
+
+        if (response.ok) {
+          // If the request is successful, display the RSVP list
+          const rsvpList = data.rsvpList;
+          const listElement = document.getElementById('rsvp-list');
+          listElement.innerHTML = '';  // Clear any previous list
+
+          // Add each RSVP guest to the list
+          rsvpList.forEach(guest => {
+            const listItem = document.createElement('li');
+            listItem.textContent = guest;
+            listElement.appendChild(listItem);
+          });
+        } else {
+          // Handle error case when the RSVP list cannot be fetched
+          alert('Error fetching RSVP list: ' + data.error);
+        }
       } catch (error) {
-        console.error('Error fetching RSVP list:', error);
+        // Handle any other error (e.g., network error)
+        console.error('There was an error:', error);
+        alert('Failed to load RSVP list.');
       }
-    }
+    });
 
     // Function to handle form submission
     async function submitForm(e) {
@@ -197,9 +209,9 @@
           body: JSON.stringify({ name })
         });
 
-        const result = await response.text();
-        alert(result);
-        
+        const result = await response.json();
+        alert(result.message);
+
         // After submitting, fetch the updated list
         fetchRSVPList();
       } catch (error) {
@@ -207,9 +219,6 @@
         alert('There was an error submitting your RSVP.');
       }
     }
-
-    // Fetch the RSVP list when the page loads
-    window.onload = fetchRSVPList;
   </script>
 </head>
 <body>
@@ -237,6 +246,7 @@
       <button type="submit">Submit your RSVP</button>
     </form>
 
+    <h2>RSVP List:</h2>
     <ul id="rsvp-list" class="rsvp-list">
       <!-- List of RSVPs will be dynamically populated here -->
     </ul>
