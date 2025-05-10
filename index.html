@@ -5,44 +5,101 @@
   <title>🎓 Graduation RSVP</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
-    body {
+    html, body {
       margin: 0;
+      padding: 0;
+      height: 100%;
       font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      background: #f3f4f6;
-      color: #333;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      background: linear-gradient(135deg, #a5b4fc, #fbcfe8, #fcd34d);
+      background-size: 400% 400%;
+      animation: hueShift 15s linear infinite;
+      filter: hue-rotate(0deg);
+      opacity: 0.4;
+    }
+
+    @keyframes hueShift {
+      0%   { filter: hue-rotate(0deg); }
+      100% { filter: hue-rotate(360deg); }
+    }
+
+    .side-gallery {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      width: 150px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .left-gallery {
+      left: 10px;
+    }
+
+    .right-gallery {
+      right: 10px;
+    }
+
+    .side-gallery img {
+      width: 120px;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      transition: transform 0.3s ease;
+    }
+
+    .side-gallery img:hover {
+      transform: scale(1.05);
     }
 
     .container {
       max-width: 700px;
-      margin: 60px auto;
-      padding: 20px;
+      margin: 80px auto;
+      padding: 30px;
       background: white;
       border-radius: 12px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 1px 60px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      position: relative;
+      z-index: 1;
     }
 
     h1 {
-      text-align: center;
-      font-size: 2em;
+      font-size: 2.2em;
       margin-bottom: 10px;
     }
 
     p {
-      text-align: center;
       font-size: 1.1em;
       color: #555;
     }
 
     form {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
       margin-top: 20px;
+    }
+
+    label {
+      font-size: 1.1em;
+      color: #555;
     }
 
     input[type="text"] {
       padding: 12px;
-      width: 100%;
+      width: 90%;
       max-width: 400px;
       font-size: 1em;
       margin-bottom: 15px;
@@ -65,27 +122,33 @@
       background-color: #4338ca;
     }
 
-    .gallery {
-      display: flex;
-      gap: 10px;
-      margin-top: 40px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-
-    .gallery img {
-      width: 180px;
-      height: 180px;
-      object-fit: cover;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-
     footer {
-      text-align: center;
       font-size: 0.9em;
       margin-top: 40px;
       color: #888;
+      transition: color 0.2s ease;
+    }
+
+    footer:hover {
+      color: #555;
+    }
+
+    @media (max-width: 800px) {
+      .side-gallery {
+        display: none;
+      }
+
+      .container {
+        margin: 40px 20px;
+      }
+
+      .container input {
+        width: 100%;
+      }
+
+      .container button {
+        width: 100%;
+      }
     }
   </style>
 
@@ -106,23 +169,33 @@
   </script>
 </head>
 <body>
+
+  <!-- Left image column -->
+  <div class="side-gallery left-gallery">
+    <img src="photo1.jpg" alt="Graduation Photo 1">
+    <img src="photo2.jpg" alt="Graduation Photo 2">
+  </div>
+
+  <!-- Right image column -->
+  <div class="side-gallery right-gallery">
+    <img src="photo3.jpg" alt="Graduation Photo 3">
+    <img src="photo4.jpg" alt="Graduation Photo 4">
+  </div>
+
   <div class="container">
     <h1>🎓 You're Invited!</h1>
-    <p>I'm graduating! Please RSVP below — I'd love to see you there!</p>
+    <p>It's an RSVP form for my graduation party... I got nothing else.</p>
 
     <form onsubmit="submitForm(event)">
-      <input id="name" type="text" required placeholder="Your Name" />
-      <button type="submit">RSVP</button>
+      <label for="name">Please enter your name to RSVP:</label><br>
+      <input id="name" type="text" required placeholder="Your Name/Names" />
+      <br />
+      <button type="submit">Submit your RSVP</button>
     </form>
 
-    <div class="gallery">
-      <img src="photo1.jpg" alt="Grad Photo 1">
-      <img src="photo2.jpg" alt="Grad Photo 2">
-      <img src="photo3.jpg" alt="Grad Photo 3">
-    </div>
-
     <footer>
-      Made with ❤️ for my graduation ✨
+      Made with love for my graduation party.
+      <br />-Nicholas
     </footer>
   </div>
 </body>
