@@ -19,8 +19,8 @@ module.exports = async (req, res) => {
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: recipients,
-    subject: 'New Graduation RSVP',
-    text: `RSVP received from: ${name}`
+    subject: 'New Graduation RSVP Alert',
+    text: `${name} is coming to Nicholas' graduation party`
   };
 
   try {
