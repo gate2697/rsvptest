@@ -2,9 +2,15 @@ const { kv } = require('@vercel/kv');
 const nodemailer = require('nodemailer');
 
 module.exports = async (req, res) => {
-  // Only allow POST requests
-  if (req.method !== 'POST') return res.status(405).send('Method Not Allowed');
-  
+  if (req.method === 'GET') {
+    return res.status(200).json({ message: 'RSVP API is reachable.' });
+  }
+
+  if (req.method !== 'POST') {
+    res.setHeader('Allow', ['POST', 'GET']);
+    return res.status(405).send('Method Not Allowed');
+  }
+
   const { name: guestName } = req.body; // Extract name from body
   if (!guestName) return res.status(400).send('Name is required'); // Check if name is present
 
