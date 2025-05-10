@@ -47,37 +47,42 @@
 
 
 
-    .side-gallery {
-      position: fixed;
-      top: 0;
-      bottom: 0;
-      width: 150px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      gap: 20px;
-    }
-
-    .left-gallery {
-      left: 10px;
-    }
-
-    .right-gallery {
-      right: 10px;
-    }
-
     .side-gallery img {
-      width: 120px;
-      height: 120px;
-      object-fit: cover;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-      transition: transform 0.3s ease;
-    }
+  width: 100%;  /* Ensure the image fills the container width */
+  height: 100%;  /* Ensure the image fills the container height */
+  object-fit: cover;  /* Ensures the image fills the space without stretching */
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  transition: transform 0.3s ease;
+}
 
-    .side-gallery img:hover {
-      transform: scale(1.05);
-    }
+.side-gallery {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  width: 150px;  /* Fixed width for the container */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 20px;
+  padding: 10px;  /* Padding to give space around images */
+}
+
+.left-gallery, .right-gallery {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 20px;
+}
+
+.left-gallery {
+  left: 10px;
+}
+
+.right-gallery {
+  right: 10px;
+}
+
 
     .container {
       max-width: 700px;
@@ -273,20 +278,20 @@
 
   <!-- Left image column -->
   <div class="side-gallery left-gallery">
-    <img src="photo1.jpg" alt="Graduation Photo 1">
-    <img src="photo2.jpg" alt="Graduation Photo 2">
+    <img src="photos/idk.jpg" alt="Graduation Photo 1">
+    <img src="photos/locker.jpg" alt="Graduation Photo 2">
   </div>
 
   <!-- Right image column -->
   <div class="side-gallery right-gallery">
-    <img src="photo3.jpg" alt="Graduation Photo 3">
-    <img src="photo4.jpg" alt="Graduation Photo 4">
+    <img src="photos/suitoflies.jpg" alt="Graduation Photo 3">
+    <img src="photos/thousandyardstare.jpg" alt="Graduation Photo 4">
   </div>
 
   <div class="container">
     <div class="header-container">
       <div class="frame">
-        <img src="frame1.jpg" alt="Frame 1">
+        <img src="photos/fd.PNG" alt="Frame 1">
       </div>
       <h1>🎓 You're Invited!</h1>
       <div class="frame">
