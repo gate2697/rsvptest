@@ -108,10 +108,23 @@
         const list = document.getElementById('rsvpList');
         list.innerHTML = '';
         rsvpList.forEach(name => {
-          const li = document.createElement('li');
-          li.textContent = name;
-          list.appendChild(li);
-        });
+  const li = document.createElement('li');
+  li.textContent = name + ' ';
+  
+  const deleteBtn = document.createElement('button');
+  deleteBtn.textContent = 'Delete';
+  deleteBtn.style.marginLeft = '10px';
+  deleteBtn.style.backgroundColor = '#ef4444';
+  deleteBtn.style.border = 'none';
+  deleteBtn.style.borderRadius = '6px';
+  deleteBtn.style.color = 'white';
+  deleteBtn.style.cursor = 'pointer';
+  deleteBtn.onclick = () => deleteRSVP(name);
+
+  li.appendChild(deleteBtn);
+  list.appendChild(li);
+});
+
       } catch (error) {
         console.error('Error fetching RSVPs:', error);
         const list = document.getElementById('rsvpList');
@@ -145,6 +158,29 @@
     }
 
     document.getElementById('rsvpForm').addEventListener('submit', handleRSVP);
+    async function deleteRSVP(name) {
+  if (!confirm(`Are you sure you want to remove ${name}?`)) return;
+
+  try {
+    const res = await fetch('../api/rsvp', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name })
+    });
+
+    const data = await res.json();
+    if (res.ok) {
+      alert(data.message || `${name} removed from the list.`);
+      fetchRSVPs(); // Refresh the list
+    } else {
+      alert(data.message || 'Failed to delete RSVP.');
+    }
+  } catch (error) {
+    console.error('Error deleting RSVP:', error);
+    alert('An error occurred while deleting.');
+  }
+}
+
 
     // Load the RSVP list on page load
     fetchRSVPs();
