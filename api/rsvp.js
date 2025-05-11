@@ -73,16 +73,26 @@ module.exports = async (req, res) => {
   }
 
   // Handling DELETE request to clear the RSVP list
-  if (req.method === 'DELETE') {  
-    try {
-      // Delete the RSVP list from Vercel KV
+  // Handling DELETE request
+if (req.method === 'DELETE') {
+  const { name } = req.body || {};
+  
+  try {
+    if (name) {
+      // Remove one instance of the name from the list
+      await kv.lrem('rsvp_list', 1, name);
+      return res.status(200).json({ message: `${name} was removed from the RSVP list.` });
+    } else {
+      // No name provided — delete the entire list
       await kv.del('rsvp_list');
       return res.status(200).json({ message: 'RSVP list cleared successfully.' });
-    } catch (err) {
-      console.error('Error clearing RSVP list:', err);
-      return res.status(500).json({ error: 'Error clearing RSVP list.' });
     }
+  } catch (err) {
+    console.error('Error deleting RSVP item(s):', err);
+    return res.status(500).json({ error: 'Error deleting RSVP entry.' });
   }
+}
+
 
   // Handling unsupported methods
   res.setHeader('Allow', ['POST', 'GET', 'DELETE']);
